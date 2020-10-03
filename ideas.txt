@@ -2,3 +2,14 @@ Pre Jam Ideas
 -Hopefully A puzzle/turn based tile game
 -Calming Music
 -DO NOT MAKE A SHOOTER
+-Scope SMALL (big is hard and leaves unpolished)
+-All main mechanics should be done by day one
+-Sleep and look after yourself as you go
+
+Stuck In a Loop
+-Play the same level over and over again
+-Make some kind of action, which is performed over and over
+-Repeating loop where previous versions of yourself are also in the level
+-Puzzle game where you must get to objective/do thing but time keeps repeating
+	-Either previous versions, or things you acn change through loops
+-Music-synced looping
