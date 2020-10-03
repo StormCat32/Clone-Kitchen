@@ -49,14 +49,14 @@ function love.load()
 	table.insert(ingredients,Ingredient.Bacon:new(200,0))
 	table.insert(ingredients,Ingredient.Lettuce:new(400,0))
 	table.insert(ingredients,Ingredient.Steak:new(100,0))
-	table.insert(ingredients,Ingredient.Egg:new(300,0))
-	table.insert(ingredients,Ingredient.Bun:new(500,0))
-	table.insert(ingredients,Ingredient.Flour:new(600,0))
+	table.insert(ingredients,Ingredient.Pasta:new(300,0,1))
+	table.insert(ingredients,Ingredient.Pasta:new(500,0,2))
+	table.insert(ingredients,Ingredient.Pasta:new(600,0,3))
 	table.insert(ingredients,Ingredient.Milk:new(700,0))
-	table.insert(ingredients,Ingredient.Pasta:new(450,0))
 	table.insert(appliances,Appliance.Bin:new(screenw-16,screenh-16*13))
 	table.insert(appliances,Appliance.FryingPan:new(0,screenh-32))
 	table.insert(appliances,Appliance.ChoppingBoard:new(screenw-16,screenh-16))
+	table.insert(appliances,Appliance.MixingBowl:new(screenw/2-8,screenh-16))
 	player = Player:new()
 	player:load()
 	table.insert(clones,Clone:new())
@@ -91,8 +91,6 @@ function love.update(dt)
 	end
 	for i,o in pairs(ingredients) do
 		o:update(dt)
-		o.cloneheld = false
-		o.appheld = false
 	end
 end
 

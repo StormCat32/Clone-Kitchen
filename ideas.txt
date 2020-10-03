@@ -20,3 +20,14 @@ Actual Idea
 -Cooking game/platformer
 -Create food from ingredients, sound it out get money etc.
 -As game progresses more and more clones will be trying to move stuff, and more customers will be ordering
+
+Level System
+-Levels that introduce new food/cooking utensils along with other game mechanics
+-Levels have a star/score system at the end and you must get at least one star to continue
+-Levels are time based e.g. 3 minutes each
+
+Endless
+-After you beat all levels you unlock endless
+-Play with all utensils
+-Score based
+-Lose when you miss a total of 5 orders
