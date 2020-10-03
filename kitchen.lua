@@ -498,7 +498,7 @@ function Ingredient.Egg:update(dt)
 end
 
 function Ingredient.Egg:draw()
-	love.graphics.setColor(0.9,0.9,0.9)
+	love.graphics.setColor(0.7,0.7,0.7)
 	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
 	love.graphics.print(self.name,self.x-8,self.y-16)
 end
@@ -527,11 +527,156 @@ function Ingredient.FriedEgg:update(dt)
 end
 
 function Ingredient.FriedEgg:draw()
+	love.graphics.setColor(0.9,0.9,0.5)
+	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+	love.graphics.print(self.name,self.x-8,self.y-16)
+end
+
+function Ingredient.Flour:new(x,y)
+	o = {}
+	setmetatable(o, self)
+	self.__index = self
+	
+	o.x = x
+	o.y = y
+	
+	return o
+end
+
+function Ingredient.Flour:update(dt)
+	ingredientUpdate(dt,self)
+	if self.cookTime > self.cookTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.BurntMatter:new(self.x,self.y))
+	end
+	if self.cutTime > self.cutTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.ChoppedMatter:new(self.x,self.y))
+	end
+end
+
+function Ingredient.Flour:draw()
+	love.graphics.setColor(0.75,0.75,0.7)
+	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+	love.graphics.print(self.name,self.x-8,self.y-16)
+end
+
+function Ingredient.Milk:new(x,y)
+	o = {}
+	setmetatable(o, self)
+	self.__index = self
+	
+	o.x = x
+	o.y = y
+	
+	return o
+end
+
+function Ingredient.Milk:update(dt)
+	ingredientUpdate(dt,self)
+	if self.cookTime > self.cookTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.BurntMatter:new(self.x,self.y))
+	end
+	if self.cutTime > self.cutTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.ChoppedMatter:new(self.x,self.y))
+	end
+end
+
+function Ingredient.Milk:draw()
 	love.graphics.setColor(0.9,0.9,0.9)
 	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
 	love.graphics.print(self.name,self.x-8,self.y-16)
 end
 
+function Ingredient.Pasta:new(x,y)
+	o = {}
+	setmetatable(o, self)
+	self.__index = self
+	
+	o.x = x
+	o.y = y
+	
+	return o
+end
+
+function Ingredient.Pasta:update(dt)
+	ingredientUpdate(dt,self)
+	if self.cookTime > self.cookTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.CookedPasta:new(self.x,self.y))
+	end
+	if self.cutTime > self.cutTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.ChoppedMatter:new(self.x,self.y))
+	end
+end
+
+function Ingredient.Pasta:draw()
+	love.graphics.setColor(0.7,0.6,0.5)
+	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+	love.graphics.print(self.name,self.x-8,self.y-16)
+end
+
+function Ingredient.CookedPasta:new(x,y)
+	o = {}
+	setmetatable(o, self)
+	self.__index = self
+	
+	o.x = x
+	o.y = y
+	
+	return o
+end
+
+function Ingredient.CookedPasta:update(dt)
+	ingredientUpdate(dt,self)
+	if self.cookTime > self.cookTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.BurntMatter:new(self.x,self.y))
+	end
+	if self.cutTime > self.cutTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.ChoppedMatter:new(self.x,self.y))
+	end
+end
+
+function Ingredient.CookedPasta:draw()
+	love.graphics.setColor(0.5,0.4,0.3)
+	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+	love.graphics.print(self.name,self.x-8,self.y-16)
+end
+
+function Ingredient.Bun:new(x,y)
+	o = {}
+	setmetatable(o, self)
+	self.__index = self
+	
+	o.x = x
+	o.y = y
+	
+	return o
+end
+
+function Ingredient.Bun:update(dt)
+	ingredientUpdate(dt,self)
+	if self.cookTime > self.cookTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.BurntMatter:new(self.x,self.y))
+	end
+	if self.cutTime > self.cutTimeMax then
+		self.remove = true
+		table.insert(ingredients,Ingredient.Bun:new(self.x-self.w/2,self.y))
+		table.insert(ingredients,Ingredient.Bun:new(self.x+self.w/2,self.y))
+	end
+end
+
+function Ingredient.Bun:draw()
+	love.graphics.setColor(0.5,0.4,0.3)
+	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+	love.graphics.print(self.name,self.x-8,self.y-16)
+end
 
 function Ingredient.BurntMatter:new(x,y)
 	o = {}
