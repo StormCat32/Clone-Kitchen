@@ -39,7 +39,7 @@ Ingredient = {
 		cookTimeMax = 5,
 		cutTimeMax = 5,
 	},
-	CookedEgg = {
+	FriedEgg = {
 		cookTimeMax = 5,
 		cutTimeMax = 5,
 	},
@@ -82,10 +82,13 @@ Appliance = {
 	Bin = {
 	},
 	FryingPan = {
+		holdnum = 0,
 	},
 	ChoppingBoard = {
+		holdnum = 0,
 	},
 	MixingBowl = {
+		holdnum = {},
 	},
 }
 
@@ -122,8 +125,6 @@ do
 		o.y = 0
 		o.w = 16
 		o.h = 16
-
-		o.using = false
 	end
 end
 
@@ -213,6 +214,22 @@ function ingredientUpdate(dt,self)
 	self.y = self.y + self.diry * dt
 end
 
+function ingredientDraw(self)
+	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+	love.graphics.print(self.name,self.x-8,self.y-16)
+	if self.appheld then
+		if self.appheld == 1 then
+			love.graphics.rectangle("fill",self.x+self.w/2-32,self.y-32,64*self.cookTime/self.cookTimeMax,8)
+		elseif self.appheld == 2 then
+			love.graphics.rectangle("fill",self.x+self.w/2-32,self.y-32,64*self.cutTime/self.cutTimeMax,8)
+		elseif self.appheld == 3 then
+			love.graphics.rectangle("fill",self.x+self.w/2-32,self.y-32,64*self.cutTime/self.cutTimeMax,8)
+		end
+		love.graphics.setColor(1,1,1)
+		love.graphics.rectangle("line",self.x+self.w/2-32,self.y-32,64,8)
+	end
+end
+
 function Ingredient.Tomato:new(x,y)
 	o = {}
 	setmetatable(o, self)
@@ -238,8 +255,7 @@ end
 
 function Ingredient.Tomato:draw()
 	love.graphics.setColor(1,0.2,0.3)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.ChoppedTomato:new(x,y)
@@ -267,8 +283,7 @@ end
 
 function Ingredient.ChoppedTomato:draw()
 	love.graphics.setColor(1,0.2,0.3)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.Lettuce:new(x,y)
@@ -296,8 +311,7 @@ end
 
 function Ingredient.Lettuce:draw()
 	love.graphics.setColor(0.1,1,0.3)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.Bacon:new(x,y)
@@ -325,8 +339,7 @@ end
 
 function Ingredient.Bacon:draw()
 	love.graphics.setColor(0.7,0.4,0.4)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.CookedBacon:new(x,y)
@@ -354,8 +367,7 @@ end
 
 function Ingredient.CookedBacon:draw()
 	love.graphics.setColor(0.6,0.3,0.3)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.Steak:new(x,y)
@@ -383,8 +395,7 @@ end
 
 function Ingredient.Steak:draw()
 	love.graphics.setColor(0.8,0.3,0.5)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.CookedSteak:new(x,y)
@@ -412,8 +423,7 @@ end
 
 function Ingredient.CookedSteak:draw()
 	love.graphics.setColor(0.7,0.2,0.5)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.Mince:new(x,y)
@@ -441,8 +451,7 @@ end
 
 function Ingredient.Mince:draw()
 	love.graphics.setColor(0.7,0.2,0.2)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.Patty:new(x,y)
@@ -470,8 +479,7 @@ end
 
 function Ingredient.Patty:draw()
 	love.graphics.setColor(0.5,0.4,0.4)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.Egg:new(x,y)
@@ -499,8 +507,7 @@ end
 
 function Ingredient.Egg:draw()
 	love.graphics.setColor(0.7,0.7,0.7)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.FriedEgg:new(x,y)
@@ -528,8 +535,7 @@ end
 
 function Ingredient.FriedEgg:draw()
 	love.graphics.setColor(0.9,0.9,0.5)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.Flour:new(x,y)
@@ -557,8 +563,7 @@ end
 
 function Ingredient.Flour:draw()
 	love.graphics.setColor(0.75,0.75,0.7)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.Milk:new(x,y)
@@ -586,8 +591,7 @@ end
 
 function Ingredient.Milk:draw()
 	love.graphics.setColor(0.9,0.9,0.9)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.Pasta:new(x,y)
@@ -614,9 +618,8 @@ function Ingredient.Pasta:update(dt)
 end
 
 function Ingredient.Pasta:draw()
-	love.graphics.setColor(0.7,0.6,0.5)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	love.graphics.setColor(0.7,0.6,0)
+	ingredientDraw(self)
 end
 
 function Ingredient.CookedPasta:new(x,y)
@@ -643,9 +646,8 @@ function Ingredient.CookedPasta:update(dt)
 end
 
 function Ingredient.CookedPasta:draw()
-	love.graphics.setColor(0.5,0.4,0.3)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	love.graphics.setColor(0.5,0.5,0)
+	ingredientDraw(self)
 end
 
 function Ingredient.Bun:new(x,y)
@@ -674,8 +676,7 @@ end
 
 function Ingredient.Bun:draw()
 	love.graphics.setColor(0.5,0.4,0.3)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.BurntMatter:new(x,y)
@@ -699,8 +700,7 @@ end
 
 function Ingredient.BurntMatter:draw()
 	love.graphics.setColor(0.2,0.2,0.2)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.MysteryMatter:new(x,y)
@@ -720,8 +720,7 @@ end
 
 function Ingredient.MysteryMatter:draw()
 	love.graphics.setColor(148/255,0,211/255)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Ingredient.ChoppedMatter:new(x,y)
@@ -745,8 +744,7 @@ end
 
 function Ingredient.ChoppedMatter:draw()
 	love.graphics.setColor(107/255,142/255,35/255)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
-	love.graphics.print(self.name,self.x-8,self.y-16)
+	ingredientDraw(self)
 end
 
 function Appliance.Bin:new(x,y)
@@ -792,7 +790,7 @@ function Appliance.FryingPan:update(dt)
 		if not o.held and not o.cloneheld then
 			if checkCollision(o.x,o.y,o.w,o.h,self.x,self.y,self.w,self.h) then
 				if self.holdnum == i or self.holdnum == 0 then
-					o.apphold = true
+					o.appheld = 1
 					o.dirx = 0
 					o.diry = 0
 					o.x = self.x+self.w/2-o.w/2
@@ -831,19 +829,23 @@ function Appliance.ChoppingBoard:update(dt)
 		if not o.held and not o.cloneheld then
 			if checkCollision(o.x,o.y,o.w,o.h,self.x,self.y,self.w,self.h) then
 				if self.holdnum == i or self.holdnum == 0 then
-					o.apphold = true
+					o.appheld = 2
 					o.dirx = 0
 					o.diry = 0
 					o.x = self.x+self.w/2-o.w/2
 					o.y = self.y+self.h/2-o.h/2
 					holding = true
 					self.holdnum = i
-					if checkCollision(player.x,player.y,player.w,player.h,self.x,self.y,self.w,self.h) then
-						o.cutTime = o.cutTime + dt
+					if player.using then
+						if checkCollision(player.x,player.y,player.w,player.h,self.x,self.y,self.w,self.h) then
+							o.cutTime = o.cutTime + dt
+						end
 					end
 					for j,p in pairs(clones) do
-						if checkCollision(p.x,p.y,p.w,p.h,self.x,self.y,self.w,self.h) then
-							o.cutTime = o.cutTime + dt
+						if p.using then
+							if checkCollision(p.x,p.y,p.w,p.h,self.x,self.y,self.w,self.h) then
+								o.cutTime = o.cutTime + dt
+							end
 						end
 					end
 				end
@@ -857,5 +859,47 @@ end
 
 function Appliance.ChoppingBoard:draw()
 	love.graphics.setColor(0.25,0.75,0.25)
+	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+end
+
+function Appliance.MixingBowl:new(x,y)
+	o = {}
+	setmetatable(o, self)
+	self.__index = self
+	
+	o.x = x
+	o.y = y
+	
+	return o
+end
+
+function Appliance.MixingBowl:update(dt)
+	for i,o in pairs(ingredients) do
+		if not o.held and not o.cloneheld then
+			if checkCollision(o.x,o.y,o.w,o.h,self.x,self.y,self.w,self.h) then
+				o.appheld = 3
+				o.dirx = 0
+				o.diry = 0
+				o.x = self.x+self.w/2-o.w/2
+				o.y = self.y+self.h/2-o.h/2
+				if player.using then
+					if checkCollision(player.x,player.y,player.w,player.h,self.x,self.y,self.w,self.h) then
+						--o.cutTime = o.cutTime + dt
+					end
+				end
+				for j,p in pairs(clones) do
+					if p.using then
+						if checkCollision(p.x,p.y,p.w,p.h,self.x,self.y,self.w,self.h) then
+							--o.cutTime = o.cutTime + dt
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+function Appliance.MixingBowl:draw()
+	love.graphics.setColor(0.25,0.25,0.75)
 	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
 end

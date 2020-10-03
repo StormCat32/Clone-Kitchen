@@ -23,6 +23,8 @@ Player = {
 	
 	holding = false,
 	holdnum = 0,
+	
+	using = false,
 }
 
 Clone = {
@@ -184,10 +186,15 @@ function Player:update(dt)
 			end
 		end
 	end
-	if love.keyboard.isDown("x","e","space") then
+	if love.keyboard.isDown("x","space") then
 		self.holding = true
 	else
 		self.holding = false
+	end
+	if love.keyboard.isDown("c","lshift","e") then
+		self.using = true
+	else
+		self.using = false
 	end
 	local holding
 	for i,o in pairs(ingredients) do
@@ -232,7 +239,7 @@ function Clone:new()
 end
 
 function Clone:record(object)
-	table.insert(self.positions,State:new(object.x,object.y,object.dirx,object.diry,object.holding))
+	table.insert(self.positions,State:new(object.x,object.y,object.dirx,object.diry,object.holding,object.using))
 end
 
 function Clone:update(dt)
@@ -242,6 +249,7 @@ function Clone:update(dt)
 		self.dirx = self.positions[self.frame].dirx
 		self.diry = self.positions[self.frame].diry
 		self.holding = self.positions[self.frame].holding
+		self.using = self.positions[self.frame].using
 		local holding
 		for i,o in pairs(ingredients) do
 			if checkCollision(o.x,o.y,o.w,o.h,self.x,self.y,self.w,self.h) then
@@ -285,7 +293,7 @@ function Clone:pathdraw()
 	end
 end
 
-function State:new(x,y,dirx,diry,holding)
+function State:new(x,y,dirx,diry,holding,using)
 	o = {}
 	setmetatable(o, self)
 	self.__index = self
@@ -295,6 +303,7 @@ function State:new(x,y,dirx,diry,holding)
 	o.dirx = dirx
 	o.diry = diry
 	o.holding = holding
+	o.using = using
 	
 	return o
 end
