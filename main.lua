@@ -45,10 +45,14 @@ function love.load()
 	table.insert(platforms,Platform:new(0,screenh-16*12,256,16,true))
 	table.insert(platforms,Platform:new(screenw-256,screenh-16*12,256,16,true))
 	table.insert(platforms,Platform:new((screenw-256)/2,screenh-16*24,256,16,true))
-	table.insert(ingredients,Ingredient:new("tomato",0,0))
-	table.insert(ingredients,Ingredient:new("lettuce",200,0))
-	table.insert(ingredients,Ingredient:new("bacon",400,0))
+	table.insert(ingredients,Ingredient.Tomato:new(0,0))
+	table.insert(ingredients,Ingredient.Bacon:new(200,0))
+	table.insert(ingredients,Ingredient.Lettuce:new(400,0))
+	table.insert(ingredients,Ingredient.Steak:new(100,0))
+	table.insert(ingredients,Ingredient.Steak:new(300,0))
 	table.insert(appliances,Appliance.Bin:new(screenw-16,screenh-16*13))
+	table.insert(appliances,Appliance.FryingPan:new(0,screenh-32))
+	table.insert(appliances,Appliance.ChoppingBoard:new(screenw-16,screenh-16))
 	player = Player:new()
 	player:load()
 	table.insert(clones,Clone:new())
@@ -75,7 +79,6 @@ function love.update(dt)
 	end
 	for i,o in pairs(appliances) do
 		o:update(dt)
-		o.cloneheld = false
 	end
 	for i,o in pairs(ingredients) do
 		if o.remove then
@@ -85,6 +88,7 @@ function love.update(dt)
 	for i,o in pairs(ingredients) do
 		o:update(dt)
 		o.cloneheld = false
+		o.appheld = false
 	end
 end
 
