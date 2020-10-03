@@ -13,3 +13,10 @@ Stuck In a Loop
 -Puzzle game where you must get to objective/do thing but time keeps repeating
 	-Either previous versions, or things you acn change through loops
 -Music-synced looping
+-Create time loops in level, which affect enemies/components but not player
+
+Actual Idea
+-Clone creating loop game
+-Cooking game/platformer
+-Create food from ingredients, sound it out get money etc.
+-As game progresses more and more clones will be trying to move stuff, and more customers will be ordering

@@ -84,6 +84,11 @@ function Player:update(dt)
 			movex = true
 		end
 	end
+	if not self.grounded then
+		if self.jumpN == self.jumpNMax then
+			self.jumpN = self.jumpNMax-1
+		end
+	end
 	if love.keyboard.isDown("w","up","z") then
 		if not self.wasDown then
 			if self.jumpN > 0 then
@@ -139,7 +144,7 @@ function Player:update(dt)
 	if self.y + self.h + self.diry * dt > screenh then
 		self.y = screenh-self.h
 		self.diry = 0
-		self.jumpN = 2
+		self.jumpN = self.jumpNMax
 		self.grounded = true
 	end
 	for i,o in pairs(platforms) do
@@ -160,7 +165,7 @@ function Player:update(dt)
 				elseif self.diry > 0 then
 					self.y = o.y-self.h
 					self.diry = 0
-					self.jumpN = 2
+					self.jumpN = self.jumpNMax
 					self.grounded = true
 				end
 			end
@@ -171,7 +176,7 @@ function Player:update(dt)
 						if not checkCollision(o.x,o.y,o.w,o.h,self.x,self.y,self.w,self.h) then
 							self.y = o.y-self.h
 							self.diry = 0
-							self.jumpN = 2
+							self.jumpN = self.jumpNMax
 							self.grounded = true
 						end
 					end
