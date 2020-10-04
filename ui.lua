@@ -357,19 +357,19 @@ function LoseMessage:new(score)
 	o.alpha = 0
 	o.rate = 3
 	
-	o.button1x = o.x+(o.w/2-o.w/4)/2
-	o.button1y = o.y+o.h/2+(o.h/2-o.h/6)/2
+	o.button1x = o.x+o.w/7
+	o.button1y = o.y+o.h/2+(o.h/2-o.h/4)/2
 	o.button1w = o.w/6
 	o.button1h = o.h/6
 	
-	o.button2x = o.x+o.w/2+(o.w/2-o.w/6)/2
+	o.button2x = o.x+o.w-o.w/7-o.w/6
 	o.button2y = o.button1y
 	o.button2w = o.button1w
 	o.button2h = o.button1h
 	
-	o.button3x = o.x+o.w/2-o.w/12
+	o.button3x = o.x+o.w/2-o.w/8
 	o.button3y = o.button1y
-	o.button3w = o.button1w
+	o.button3w = o.w/4
 	o.button3h = o.button1h
 	
 	o.tut = false

@@ -1,3 +1,5 @@
+orderLoseSound = love.audio.newSource("sound/lose.wav","static")
+
 Order = {
 	ChoppedTomato = {--2
 		name = "Chopped Tomato",
@@ -193,6 +195,7 @@ function orderUpdate(dt,self)
 			game.score = 0
 		end
 		game.fails = game.fails + 1
+		orderLoseSound:play()
 		if game.fails >= 3 then
 			game:over()
 		end

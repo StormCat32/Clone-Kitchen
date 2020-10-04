@@ -1,5 +1,7 @@
 --Stuck in a loop
 
+jumpSound = love.audio.newSource("sound/jump.wav","static")
+
 Player = {
 	speed = 500,
 	
@@ -105,6 +107,7 @@ function Player:update(dt)
 			if self.jumpN > 0 then
 				self.diry = -self.intVel
 				self.jumpN = self.jumpN - 1
+				jumpSound:play()
 			end
 		end
 		self.wasDown = true

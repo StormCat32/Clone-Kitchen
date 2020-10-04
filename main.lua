@@ -1,10 +1,15 @@
 screenw = 1920
 screenh = 1080
 
+if not love.filesystem.getInfo("hiscore.lua") then
+	love.filesystem.write("hiscore.lua","hiscore=0")
+end
+
 require "kitchen"
 require "player"
 require "order"
 require "ui"
+require "hiscore"
 
 Platform = {
 	x = 0,
@@ -74,15 +79,22 @@ function Game:update(dt)
 		end
 		newOrder()
 	end
+	if self.score > hiscore then
+		hiscore = self.score
+	end
 end
 
 function Game:draw()
 	love.graphics.setFont(bigFont)
-	local text = love.graphics.newText(love.graphics.getFont(),"score: "..self.score)
+	local text = love.graphics.newText(love.graphics.getFont(),"hiscore: "..hiscore)
 	local off = text:getWidth()
 	local offy = text:getHeight() + 4
 	love.graphics.setColor(1,1,1)
-	love.graphics.print("score: "..self.score,screenw-off-4,4)
+	love.graphics.print("hiscore: "..hiscore,screenw-off-4,4)
+	text = love.graphics.newText(love.graphics.getFont(),"score: "..self.score)
+	off = text:getWidth()
+	love.graphics.print("score: "..self.score,screenw-off-4,offy + 8)
+	offy = offy + text:getHeight() + 4
 	text = love.graphics.newText(love.graphics.getFont(),"time to next order: "..math.floor(self.orderTimerMax-self.orderTimer))
 	off = text:getWidth()
 	love.graphics.print("time to next order: "..math.floor(self.orderTimerMax-self.orderTimer),screenw-off-4,offy + 8)
@@ -102,6 +114,7 @@ function Game:over()
 	ingredients = {}
 	orders = {}
 	table.insert(ui,LoseMessage:new(self.score))
+	love.filesystem.write("hiscore.lua","hiscore = "..hiscore)
 end
 
 function Game:start()
@@ -171,7 +184,7 @@ function love.load()
 	player = Player:new()
 	player:load()
 	
-	tutorialMessage(27)
+	tutorialMessage(1)
 end
 
 function love.update(dt)
@@ -205,6 +218,24 @@ function love.update(dt)
 	for i,o in pairs(appliances) do
 		o:update(dt)
 	end
+	cutplay = false
+	cookplay = false
+	for i,o in pairs(ingredients) do
+		if o.appheld then
+			if o.appheld == 2 and o.cutting then
+				cutplay = true
+			end
+			if o.appheld == 1 then
+				cookplay = true
+			end
+		end
+	end
+	if not cookplay then
+		cookSound:stop()
+	end
+	if not cutplay then
+		cutSound:stop()
+	end
 	for i,o in pairs(ingredients) do
 		if o.remove then
 			table.remove(ingredients,i)
@@ -227,6 +258,7 @@ end
 
 function love.keypressed(key)
 	if key == "escape" then
+		love.filesystem.write("hiscore.lua","hiscore = "..hiscore)
 		love.event.quit()
 	end
 end

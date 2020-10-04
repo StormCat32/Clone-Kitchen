@@ -1,3 +1,10 @@
+completeSound = love.audio.newSource("sound/cookcut.wav","static")
+deliverSound = love.audio.newSource("sound/deliver.wav","static")
+binSound = love.audio.newSource("sound/bin.wav","static")
+cutSound = love.audio.newSource("sound/cut.wav","static")
+cookSound = love.audio.newSource("sound/fry.wav","static")
+cookSound:setVolume(0.6)
+
 Ingredient = {
 	Tomato = {--1
 		cookTimeMax = 5,
@@ -469,12 +476,18 @@ end
 function Ingredient.Tomato:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cookTime = self.cookTimeMax
+		end
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedTomato:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedTomato:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -497,12 +510,22 @@ end
 function Ingredient.ChoppedTomato:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cookTime = self.cookTimeMax
+		end
 	end
 	if self.cutTime > self.cutTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cutTime = self.cutTimeMax
+		end
 	end
 end
 
@@ -525,12 +548,22 @@ end
 function Ingredient.Lettuce:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cookTime = self.cookTimeMax
+		end
 	end
 	if self.cutTime > self.cutTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cutTime = self.cutTimeMax
+		end
 	end
 end
 
@@ -552,13 +585,19 @@ end
 
 function Ingredient.Bacon:update(dt)
 	ingredientUpdate(dt,self)
+	if self.cutTime > self.cutTimeMax then
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cutTime = self.cutTimeMax
+		end
+	end
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.CookedBacon:new(math.floor(self.x),math.floor(self.y)))
-	end
-	if self.cutTime > self.cutTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.CookedBacon:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -581,12 +620,22 @@ end
 function Ingredient.CookedBacon:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cookTime = self.cookTimeMax
+		end
 	end
 	if self.cutTime > self.cutTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cutTime = self.cutTimeMax
+		end
 	end
 end
 
@@ -610,11 +659,13 @@ function Ingredient.Steak:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.CookedSteak:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.CookedSteak:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.Mince:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.Mince:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -638,11 +689,13 @@ function Ingredient.CookedSteak:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -666,11 +719,13 @@ function Ingredient.Mince:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.Patty:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.Patty:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -694,11 +749,13 @@ function Ingredient.Patty:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -722,11 +779,13 @@ function Ingredient.Egg:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.FriedEgg:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.FriedEgg:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -750,11 +809,13 @@ function Ingredient.FriedEgg:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -778,11 +839,13 @@ function Ingredient.Flour:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -806,11 +869,13 @@ function Ingredient.Milk:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -841,11 +906,13 @@ function Ingredient.Pasta:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.CookedPasta:new(math.floor(self.x),math.floor(self.y),self.version))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.CookedPasta:new(math.floor(self.x),math.floor(self.y),self.version))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -869,12 +936,15 @@ function Ingredient.Bun:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.Bun:new(self.x-self.w/2,self.y))
-		table.insert(ingredients,Ingredient.Bun:new(self.x+self.w/2,self.y))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.Bun:new(self.x-self.w/2,self.y))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.Bun:new(self.x+self.w/2,self.y))
 	end
 end
 
@@ -903,7 +973,8 @@ function Ingredient.Batter:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.Pancake:new(math.floor(self.x),math.floor(self.y),self.version))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.Pancake:new(math.floor(self.x),math.floor(self.y),self.version))
 	end
 end
 
@@ -935,7 +1006,8 @@ function Ingredient.RawOmelette:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.Omelette:new(math.floor(self.x),math.floor(self.y),self.version))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.Omelette:new(math.floor(self.x),math.floor(self.y),self.version))
 	end
 end
 
@@ -960,12 +1032,22 @@ end
 function Ingredient.Salad:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cookTime = self.cookTimeMax
+		end
 	end
 	if self.cutTime > self.cutTimeMax then
-		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		if game.active then
+			self.remove = true
+			completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		else
+			self.cutTime = self.cutTimeMax
+		end
 	end
 end
 
@@ -1000,11 +1082,13 @@ function Ingredient.Burger:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1033,11 +1117,13 @@ function Ingredient.Pancake:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1069,11 +1155,13 @@ function Ingredient.Omelette:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1102,11 +1190,13 @@ function Ingredient.BaconEgg:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1139,11 +1229,13 @@ function Ingredient.CookedPasta:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1167,11 +1259,13 @@ function Ingredient.BLT:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1203,11 +1297,13 @@ function Ingredient.SteakEgg:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1235,7 +1331,8 @@ function Ingredient.BurntMatter:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1259,11 +1356,13 @@ function Ingredient.MysteryMatter:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cutTime > self.cutTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.ChoppedMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1287,7 +1386,8 @@ function Ingredient.ChoppedMatter:update(dt)
 	ingredientUpdate(dt,self)
 	if self.cookTime > self.cookTimeMax then
 		self.remove = true
-		table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
+		completeSound:play()
+        table.insert(ingredients,Ingredient.BurntMatter:new(math.floor(self.x),math.floor(self.y)))
 	end
 end
 
@@ -1317,6 +1417,7 @@ function Appliance.Bin:update(dt)
 		if not o.held and not o.cloneheld then
 			if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
 				o.remove = true
+				binSound:play()
 			end
 		end
 	end
@@ -1352,6 +1453,9 @@ function Appliance.FryingPan:update(dt)
 					holding = true
 					self.holdnum = i
 					o.cookTime = o.cookTime + dt
+					if not cookSound:isPlaying() then
+						cookSound:play()
+					end
 				end
 			end
 		end
@@ -1390,15 +1494,24 @@ function Appliance.ChoppingBoard:update(dt)
 					o.y = self.y+self.h/2-o.h/2
 					holding = true
 					self.holdnum = i
+					o.cutting = false
 					if player.using then
 						if checkCollision(player.x,player.y,player.w,player.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
 							o.cutTime = o.cutTime + dt
+							o.cutting = true
+							if not cutSound:isPlaying() then
+								cutSound:play()
+							end
 						end
 					end
 					for j,p in pairs(clones) do
 						if p.using then
 							if checkCollision(p.x,p.y,p.w,p.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
 								o.cutTime = o.cutTime + dt
+								o.cutting = true
+								if not cutSound:isPlaying() then
+									cutSound:play()
+								end
 							end
 						end
 					end
@@ -1433,12 +1546,23 @@ function Appliance.MixingBowl:update(dt)
 		for i,o in pairs(ingredients) do
 			if not o.held and not o.cloneheld then
 				if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
-					o.appheld = 3
-					o.dirx = 0
-					o.diry = 0
-					o.x = self.x+self.w/2-o.w/2
-					o.y = self.y+self.h/2-o.h/2
-					ingredientCount = ingredientCount+1
+					if game.active then
+						o.appheld = 3
+						o.dirx = 0
+						o.diry = 0
+						o.x = self.x+self.w/2-o.w/2
+						o.y = self.y+self.h/2-o.h/2
+						ingredientCount = ingredientCount+1
+					else
+						if o.id == 2 or o.id == 3 then
+							o.appheld = 3
+							o.dirx = 0
+							o.diry = 0
+							o.x = self.x+self.w/2-o.w/2
+							o.y = self.y+self.h/2-o.h/2
+							ingredientCount = ingredientCount+1
+						end
+					end
 				end
 			end
 		end
@@ -1449,9 +1573,17 @@ function Appliance.MixingBowl:update(dt)
 				if not o.held and not o.cloneheld then
 					if not o.remove then
 						if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
-							table.insert(self.ingredient,o)
-							o.remove = true
-							self.mixTime = 0
+							if game.active then
+								table.insert(self.ingredient,o)
+								o.remove = true
+								self.mixTime = 0
+							else
+								if o.id == 2 or o.id == 3 then
+									table.insert(self.ingredient,o)
+									o.remove = true
+									self.mixTime = 0
+								end
+							end
 						end
 					end
 				end
@@ -1479,16 +1611,25 @@ function Appliance.MixingBowl:update(dt)
 				if not o.held and not o.cloneheld then
 					if not o.remove then
 						if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
-							table.insert(self.ingredient,o)
-							o.remove = true
-							self.mixTime = 0
+							if game.active then
+								table.insert(self.ingredient,o)
+								o.remove = true
+								self.mixTime = 0
+							else
+								if o.id == 2 or o.id == 3 then
+									table.insert(self.ingredient,o)
+									o.remove = true
+									self.mixTime = 0
+								end
+							end
 						end
 					end
 				end
 			end
 		end
 		if self.mixTime > self.mixTimeMax then
-			table.insert(ingredients,RecipeSpawn(self.ingredient,self.x+self.w/2-self.ingredient[1].w/2,self.y+self.h/2-self.ingredient[1].h/2))
+			completeSound:play()
+        table.insert(ingredients,RecipeSpawn(self.ingredient,self.x+self.w/2-self.ingredient[1].w/2,self.y+self.h/2-self.ingredient[1].h/2))
 			self.mixing = false
 			self.mixTime = 0
 			self.ingredients = {}
@@ -1637,7 +1778,8 @@ function Appliance.IngredientBox:spawnIngredient(id)
 	end
 	ing.dirx = (math.random()/2+0.5)*neg
 	ing.diry = -player.intVel*(math.random()/2+0.5)
-	table.insert(ingredients,ing)
+	completeSound:play()
+        table.insert(ingredients,ing)
 end
 
 function Appliance.IngredientBox:draw()
@@ -1650,6 +1792,7 @@ function deliver(food)
 		if o.id == food.id then
 			game.score = game.score + math.ceil(food.value+food.value*o.waitTime/o.waitTimeMax)
 			o.remove = true
+			deliverSound:play()
 			break
 		end
 	end
