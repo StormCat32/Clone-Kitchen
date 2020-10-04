@@ -95,6 +95,29 @@ function Game:over()
 	self.active = false
 end
 
+function Game:start()
+	self.active = true
+	self.score = 0
+	ingredients = {}
+	appliances = {}
+	ui = {}
+	orders = {}
+	clones = {}
+	table.insert(appliances,Appliance.FryingPan:new(0,screenh-16*26))
+	table.insert(appliances,Appliance.ChoppingBoard:new(screenw-32,screenh-16*26))
+	
+	table.insert(appliances,Appliance.FryingPan:new((screenw-32)/2-32,screenh-16*15-32))
+	table.insert(appliances,Appliance.ChoppingBoard:new((screenw+32)/2,screenh-16*15-32))
+
+	table.insert(appliances,Appliance.MixingBowl:new((screenw-32)/2-32,screenh-32))
+	table.insert(appliances,Appliance.Bin:new((screenw+32)/2,screenh-32))
+	
+	table.insert(appliances,Appliance.Delivery:new(0,screenh-32))
+	table.insert(appliances,Appliance.Delivery:new(screenw-32,screenh-32))
+	
+	table.insert(appliances,Appliance.IngredientBox:new(screenw/2-16,screenh-16*35-32))
+end
+
 function love.load()
 	love.graphics.setBackgroundColor(50/255,50/255,50/255)
 	smallFont = love.graphics.newFont("slkscr.ttf",16)
@@ -122,24 +145,13 @@ function love.load()
 	table.insert(platforms,Platform:new(256,screenh-16*50,312,32,true))
 	table.insert(platforms,Platform:new(screenw-256-312,screenh-16*50,312,32,true))
 	
-	table.insert(appliances,Appliance.FryingPan:new(0,screenh-16*26))
-	table.insert(appliances,Appliance.ChoppingBoard:new(screenw-32,screenh-16*26))
-	
-	table.insert(appliances,Appliance.FryingPan:new((screenw-32)/2-32,screenh-16*15-32))
-	table.insert(appliances,Appliance.ChoppingBoard:new((screenw+32)/2,screenh-16*15-32))
-
-	table.insert(appliances,Appliance.MixingBowl:new((screenw-32)/2-32,screenh-32))
-	table.insert(appliances,Appliance.Bin:new((screenw+32)/2,screenh-32))
-	
-	table.insert(appliances,Appliance.Delivery:new(0,screenh-32))
-	table.insert(appliances,Appliance.Delivery:new(screenw-32,screenh-32))
-	
 	table.insert(appliances,Appliance.IngredientBox:new(screenw/2-16,screenh-16*35-32))
+	
 	player = Player:new()
 	player:load()
 	table.insert(clones,Clone:new())
 	
-	tutorialMessage(1)
+	tutorialMessage(19)
 end
 
 function love.update(dt)
@@ -166,22 +178,24 @@ function love.update(dt)
 				o:update(dt)
 			end
 		end
-		for i,o in pairs(appliances) do
-			o:update(dt)
+	end
+	for i,o in pairs(appliances) do
+		o:update(dt)
+	end
+	for i,o in pairs(ingredients) do
+		if o.remove then
+			table.remove(ingredients,i)
 		end
-		for i,o in pairs(ingredients) do
-			if o.remove then
-				table.remove(ingredients,i)
-			end
+	end
+	for i,o in pairs(ingredients) do
+		o:update(dt)
+	end
+	for i,o in pairs(orders) do
+		if o.remove then
+			table.remove(orders,i)
 		end
-		for i,o in pairs(ingredients) do
-			o:update(dt)
-		end
-		for i,o in pairs(orders) do
-			if o.remove then
-				table.remove(orders,i)
-			end
-		end
+	end
+	if game.active then
 		for i,o in pairs(orders) do
 			o:update(dt)
 		end
@@ -222,16 +236,16 @@ function love.draw()
 		end
 	end
 	player:draw()
+	for i,o in pairs(ingredients) do
+		o:draw()
+	end
+	love.graphics.setFont(bigFont)
+	local x = 0
+	for i,o in pairs(orders) do
+		o:draw(x)
+		x = x + o.w + 4
+	end
 	if game.active then
-		for i,o in pairs(ingredients) do
-			o:draw()
-		end
-		love.graphics.setFont(bigFont)
-		local x = 0
-		for i,o in pairs(orders) do
-			o:draw(x)
-			x = x + o.w + 4
-		end
 		game:draw()
 	end
 	for i,o in pairs(ui) do

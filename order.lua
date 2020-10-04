@@ -200,6 +200,7 @@ function orderUpdate(dt,self)
 end
 
 function orderDraw(self,x)
+	love.graphics.setLineWidth(2)
 	local w = 2
 	local text = love.graphics.newText(love.graphics.getFont(),self.name)
 	local off = text:getWidth()
@@ -208,7 +209,7 @@ function orderDraw(self,x)
 		w = off
 	end
 	love.graphics.setColor(1,1,1)
-	love.graphics.print(self.name,34+x,8)
+	love.graphics.print(self.name,10+x,8)
 	if self.ingList then
 		for z = 1,#self.ingList do
 			text = love.graphics.newText(love.graphics.getFont()," -"..self.ingList[z])
@@ -217,11 +218,13 @@ function orderDraw(self,x)
 			if off > w then
 				w = off
 			end
-			love.graphics.print(" -"..self.ingList[z],34+x,8+offy)
+			love.graphics.print(" -"..self.ingList[z],10+x,8+offy)
 			offy = offy + offy2 + 2
 		end
 	end
 	w = w + 4
+	love.graphics.setColor(88/255,108/255,121/255)
+	love.graphics.rectangle("fill",8+x,8,self.w,offy+16)
 	if self.waitTime < self.waitTimeMax/2 then
 		love.graphics.setColor(0,1,0)
 	elseif self.waitTime < 3*self.waitTimeMax/4 then
@@ -229,11 +232,32 @@ function orderDraw(self,x)
 	else
 		love.graphics.setColor(1,0,0)
 	end
-	love.graphics.rectangle("fill",32+x,offy+8,self.w*(1-self.waitTime/self.waitTimeMax),16)
+	love.graphics.rectangle("fill",8+x,offy+8,self.w*(1-self.waitTime/self.waitTimeMax),16)
 	love.graphics.setColor(1,1,1)
-	love.graphics.rectangle("line",32+x,offy+8,self.w,16)
-	love.graphics.rectangle("line",32+x,8,self.w,offy+16)
+	love.graphics.rectangle("line",8+x,offy+8,self.w,16)
+	love.graphics.rectangle("line",8+x,8,self.w,offy+16)
 	self.w = w
+	text = love.graphics.newText(love.graphics.getFont(),self.name)
+	off = text:getWidth()
+	offy = text:getHeight()+2
+	if off > w then
+		w = off
+	end
+	love.graphics.setColor(1,1,1)
+	love.graphics.print(self.name,10+x,8)
+	if self.ingList then
+		for z = 1,#self.ingList do
+			text = love.graphics.newText(love.graphics.getFont()," -"..self.ingList[z])
+			off = text:getWidth()
+			offy2 = text:getHeight()
+			if off > w then
+				w = off
+			end
+			love.graphics.print(" -"..self.ingList[z],10+x,8+offy)
+			offy = offy + offy2 + 2
+		end
+	end
+	love.graphics.setLineWidth(1)
 end
 
 function orderIngSpawn(list)

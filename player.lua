@@ -211,6 +211,7 @@ function Player:update(dt)
 			if self.holding then
 				if self.holdnum == i or self.holdnum == 0 then
 					o.held = true
+					o.appheld = false
 					o.dirx = self.dirx
 					o.diry = self.diry
 					o.x = self.x+self.w/2-o.w/2
@@ -275,6 +276,7 @@ function Clone:update(dt)
 					if self.holding then
 						if self.holdnum == i or self.holdnum == 0 then
 							o.cloneheld = true
+							o.appheld = false
 							o.dirx = self.dirx
 							o.diry = self.diry
 							o.x = self.x+self.w/2-o.w/2

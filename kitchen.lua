@@ -383,7 +383,6 @@ function ingredientDraw(self)
 	love.graphics.setColor(1,1,1)
 	love.graphics.print(self.name,math.floor(self.x+self.w/2-off/2),math.floor(self.y-offy-2))
 	love.graphics.draw(self.image,math.floor(self.x),math.floor(self.y))
-	self.appheld = false
 	self.cloneheld = false
 end
 
@@ -1586,29 +1585,31 @@ function Appliance.IngredientBox:new(x,y)
 end
 
 function Appliance.IngredientBox:update(dt)
-	self.randTime = self.randTime + dt
-	if self.randTime >= self.randTimeMax then
-		local rand = math.random(1,8)
-		if game.gameTime <= 60 then
-			rand = math.random(1,5)
+	if game.active then
+		self.randTime = self.randTime + dt
+		if self.randTime >= self.randTimeMax then
+			local rand = math.random(1,8)
+			if game.gameTime <= 60 then
+				rand = math.random(1,5)
+			end
+			if rand == 2 then--Lettuce
+				rand = 3
+			elseif rand == 3 then--Bacon
+				rand = 4
+			elseif rand == 4 then--Steak
+				rand = 6
+			elseif rand == 5 then--Egg
+				rand = 10
+			elseif rand == 6 then--Flour
+				rand = 12
+			elseif rand == 7 then--Milk
+				rand = 13
+			elseif rand == 8 then--Bun
+				rand = 15
+			end
+			self:spawnIngredient(rand)
+			self.randTime = 0
 		end
-		if rand == 2 then--Lettuce
-			rand = 3
-		elseif rand == 3 then--Bacon
-			rand = 4
-		elseif rand == 4 then--Steak
-			rand = 6
-		elseif rand == 5 then--Egg
-			rand = 10
-		elseif rand == 6 then--Flour
-			rand = 12
-		elseif rand == 7 then--Milk
-			rand = 13
-		elseif rand == 8 then--Bun
-			rand = 15
-		end
-		self:spawnIngredient(rand)
-		self.randTime = 0
 	end
 end
 
