@@ -184,7 +184,7 @@ function love.load()
 	player = Player:new()
 	player:load()
 	
-	tutorialMessage(1)
+	tutorialMessage(27)
 end
 
 function love.update(dt)
