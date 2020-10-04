@@ -221,27 +221,33 @@ Ingredient = {
 
 Appliance = {
 	Bin = {
+		image = love.graphics.newImage("assets/bin.png"),
 	},
 	FryingPan = {
 		holdnum = 0,
+		image = love.graphics.newImage("assets/fryingpan.png"),
 	},
 	ChoppingBoard = {
 		holdnum = 0,
+		image = love.graphics.newImage("assets/choppingboard.png"),
 	},
 	MixingBowl = {
 		mixTime = 0,
 		mixTimeMax = 5,
 		mixing = false,
 		ingredient = {},
+		image = love.graphics.newImage("assets/mixing.png"),
 	},
 	Delivery = {
 		holdnum = 0,
 		delTime = 0,
 		delTimeMax = 1,
+		image = love.graphics.newImage("assets/delivery.png"),
 	},
 	IngredientBox = {
 		randTime = 0,
 		randTimeMax = 20,
+		image = love.graphics.newImage("assets/ingredientbox.png"),
 	},
 }
 
@@ -360,6 +366,9 @@ function ingredientUpdate(dt,self)
 				end
 			end
 		end
+	end
+	if self.diry * dt >= 32 then
+		self.diry = 32/dt
 	end
 	self.x = self.x + self.dirx * self.speed * dt
 	self.y = self.y + self.diry * dt
@@ -1314,8 +1323,8 @@ function Appliance.Bin:update(dt)
 end
 
 function Appliance.Bin:draw()
-	love.graphics.setColor(0.75,0.25,0.75)
-	love.graphics.rectangle("fill",math.floor(self.x),math.floor(self.y),self.w,self.h)
+	love.graphics.setColor(1,1,1)
+	love.graphics.draw(self.image,math.floor(self.x),math.floor(self.y))
 end
 
 function Appliance.FryingPan:new(x,y)
@@ -1353,8 +1362,8 @@ function Appliance.FryingPan:update(dt)
 end
 
 function Appliance.FryingPan:draw()
-	love.graphics.setColor(0.75,0.25,0.25)
-	love.graphics.rectangle("fill",math.floor(self.x),math.floor(self.y),self.w,self.h)
+	love.graphics.setColor(1,1,1)
+	love.graphics.draw(self.image,math.floor(self.x),math.floor(self.y))
 end
 
 function Appliance.ChoppingBoard:new(x,y)
@@ -1403,8 +1412,8 @@ function Appliance.ChoppingBoard:update(dt)
 end
 
 function Appliance.ChoppingBoard:draw()
-	love.graphics.setColor(0.25,0.75,0.25)
-	love.graphics.rectangle("fill",math.floor(self.x),math.floor(self.y),self.w,self.h)
+	love.graphics.setColor(1,1,1)
+	love.graphics.draw(self.image,math.floor(self.x),math.floor(self.y))
 end
 
 function Appliance.MixingBowl:new(x,y)
@@ -1488,9 +1497,10 @@ function Appliance.MixingBowl:update(dt)
 end
 
 function Appliance.MixingBowl:draw()
-	love.graphics.setColor(0.25,0.25,0.75)
-	love.graphics.rectangle("fill",math.floor(self.x),math.floor(self.y),self.w,self.h)
+	love.graphics.setColor(1,1,1)
+	love.graphics.draw(self.image,math.floor(self.x),math.floor(self.y))
 	if self.mixing then
+		love.graphics.setColor(0.25,0.25,0.75)
 		offy = 0
 		for z = 1,#self.ingredient do
 			local text = love.graphics.newText(love.graphics.getFont(),self.ingredient[z].name)
@@ -1564,9 +1574,10 @@ function Appliance.Delivery:update(dt)
 end
 
 function Appliance.Delivery:draw()
-	love.graphics.setColor(0.75,0.75,0.25)
-	love.graphics.rectangle("fill",math.floor(self.x),math.floor(self.y),self.w,self.h)
+	love.graphics.setColor(1,1,1)
+	love.graphics.draw(self.image,math.floor(self.x),math.floor(self.y))
 	if self.holdnum ~= 0 then
+		love.graphics.setColor(0.75,0.75,0.25)
 		love.graphics.rectangle("fill",self.x+self.w/2-32,self.y-28,64*self.delTime/self.delTimeMax,8)
 		love.graphics.setColor(1,1,1)
 		love.graphics.rectangle("line",self.x+self.w/2-32,self.y-28,64,8)
@@ -1630,8 +1641,8 @@ function Appliance.IngredientBox:spawnIngredient(id)
 end
 
 function Appliance.IngredientBox:draw()
-	love.graphics.setColor(0.25,0.75,0.75)
-	love.graphics.rectangle("fill",math.floor(self.x),math.floor(self.y),self.w,self.h)
+	love.graphics.setColor(1,1,1)
+	love.graphics.draw(self.image,math.floor(self.x),math.floor(self.y))
 end
 
 function deliver(food)

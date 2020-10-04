@@ -229,6 +229,9 @@ function Player:update(dt)
 	if not holding then
 		self.holdnum = 0
 	end
+	if self.diry * dt >= 32 then
+		self.diry = 32/dt
+	end
 	self.x = self.x + self.dirx * self.speed * dt
 	self.y = self.y + self.diry * dt
 end

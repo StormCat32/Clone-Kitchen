@@ -68,20 +68,26 @@ function Game:update(dt)
 	end
 	if self.orderTimer >= self.orderTimerMax then
 		self.orderTimer = 0
+		self.orderTimerMax = self.orderTimerMax -1 
+		if self.orderTimerMax < 10 then
+			self.orderTimerMax = 10
+		end
 		newOrder()
 	end
 end
 
 function Game:draw()
-	local text = love.graphics.newText(love.graphics.getFont(),self.score)
+	love.graphics.setFont(bigFont)
+	local text = love.graphics.newText(love.graphics.getFont(),"score: "..self.score)
 	local off = text:getWidth()
-	local offy = text:getWidth() + 4
+	local offy = text:getHeight() + 4
 	love.graphics.setColor(1,1,1)
-	love.graphics.print(self.score,screenw-off-4,4)
-	text = love.graphics.newText(love.graphics.getFont(),math.floor(self.orderTimerMax-self.orderTimer))
+	love.graphics.print("score: "..self.score,screenw-off-4,4)
+	text = love.graphics.newText(love.graphics.getFont(),"time to next order: "..math.floor(self.orderTimerMax-self.orderTimer))
 	off = text:getWidth()
-	love.graphics.print(math.floor(self.orderTimerMax-self.orderTimer),screenw-off-4,offy + 8)
-	offy = offy + text:getWidth() + 4
+	love.graphics.print("time to next order: "..math.floor(self.orderTimerMax-self.orderTimer),screenw-off-4,offy + 8)
+	offy = offy + text:getHeight() + 4
+	love.graphics.setFont(medFont)
 	if self.fails > 0 then
 		text = love.graphics.newText(love.graphics.getFont(),"X")
 		off = text:getWidth()+4
@@ -93,29 +99,43 @@ end
 
 function Game:over()
 	self.active = false
+	ingredients = {}
+	orders = {}
+	table.insert(ui,LoseMessage:new(self.score))
 end
 
 function Game:start()
-	self.active = true
+	loop()
 	self.score = 0
+	self.timer = 0
+	self.timerMax = 20
+	self.orderTimer = 25
+	self.orderTimerMax = 30
+	self.gameTime = 0
+	self.fails = 0
+	self.active = true
 	ingredients = {}
 	appliances = {}
 	ui = {}
 	orders = {}
 	clones = {}
-	table.insert(appliances,Appliance.FryingPan:new(0,screenh-16*26))
-	table.insert(appliances,Appliance.ChoppingBoard:new(screenw-32,screenh-16*26))
+	table.insert(appliances,Appliance.FryingPan:new(32,screenh-16*26))
+	table.insert(appliances,Appliance.ChoppingBoard:new(screenw-64,screenh-16*26))
 	
 	table.insert(appliances,Appliance.FryingPan:new((screenw-32)/2-32,screenh-16*15-32))
 	table.insert(appliances,Appliance.ChoppingBoard:new((screenw+32)/2,screenh-16*15-32))
 
-	table.insert(appliances,Appliance.MixingBowl:new((screenw-32)/2-32,screenh-32))
-	table.insert(appliances,Appliance.Bin:new((screenw+32)/2,screenh-32))
+	table.insert(appliances,Appliance.MixingBowl:new((screenw-32)/2,screenh-32))
 	
-	table.insert(appliances,Appliance.Delivery:new(0,screenh-32))
-	table.insert(appliances,Appliance.Delivery:new(screenw-32,screenh-32))
+	table.insert(appliances,Appliance.Bin:new(256+(312-32)/2,screenh-16*52))
+	table.insert(appliances,Appliance.Bin:new(screenw-256-312+(312-32)/2,screenh-16*52))
+	
+	table.insert(appliances,Appliance.Delivery:new(32,screenh-32))
+	table.insert(appliances,Appliance.Delivery:new(screenw-64,screenh-32))
 	
 	table.insert(appliances,Appliance.IngredientBox:new(screenw/2-16,screenh-16*35-32))
+	
+	table.insert(clones,Clone:new())
 end
 
 function love.load()
@@ -123,6 +143,7 @@ function love.load()
 	smallFont = love.graphics.newFont("slkscr.ttf",16)
 	bigFont = love.graphics.newFont("slkscr.ttf",24)
 	medFont = love.graphics.newFont("slkscr.ttf",64)
+	bigbigFont = love.graphics.newFont("slkscr.ttf",128)
 	math.randomseed(os.time())
 	game = Game:new()
 	ui = {}
@@ -149,12 +170,14 @@ function love.load()
 	
 	player = Player:new()
 	player:load()
-	table.insert(clones,Clone:new())
 	
-	tutorialMessage(19)
+	tutorialMessage(27)
 end
 
 function love.update(dt)
+	mousex,mousey = love.mouse.getPosition()
+	mousex = mousex*screenw/rscreenw
+	mousey = mousey*screenh/rscreenh
 	player:update(dt)
 	for i,o in pairs(ui) do
 		if o.remove then
