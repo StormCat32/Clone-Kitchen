@@ -1,5 +1,10 @@
+screenw = 1920
+screenh = 1080
+
 require "kitchen"
 require "player"
+require "order"
+require "ui"
 
 Platform = {
 	x = 0,
@@ -8,6 +13,17 @@ Platform = {
 	h = 16,
 	
 	through = false,
+}
+
+Game = {
+	score = 0,
+	timer = 0,
+	timerMax = 20,
+	orderTimer = 25,
+	orderTimerMax = 30,
+	gameTime = 0,
+	fails = 0,
+	active = false,
 }
 
 function Platform:new(x,y,w,h,through)
@@ -31,66 +47,144 @@ function Platform:draw()
 	else
 		love.graphics.setColor(0.75,0.75,0.75)
 	end
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+	love.graphics.rectangle("fill",math.floor(self.x),math.floor(self.y),self.w,self.h)
+end
+
+function Game:new()
+	o = {}
+	setmetatable(o, self)
+	self.__index = self
+	
+	return o
+end
+
+function Game:update(dt)
+	self.timer = self.timer + dt
+	self.orderTimer = self.orderTimer + dt
+	self.gameTime = self.gameTime + dt
+	if self.timer >= self.timerMax then
+		self.timer = 0
+		loop()
+	end
+	if self.orderTimer >= self.orderTimerMax then
+		self.orderTimer = 0
+		newOrder()
+	end
+end
+
+function Game:draw()
+	local text = love.graphics.newText(love.graphics.getFont(),self.score)
+	local off = text:getWidth()
+	local offy = text:getWidth() + 4
+	love.graphics.setColor(1,1,1)
+	love.graphics.print(self.score,screenw-off-4,4)
+	text = love.graphics.newText(love.graphics.getFont(),math.floor(self.orderTimerMax-self.orderTimer))
+	off = text:getWidth()
+	love.graphics.print(math.floor(self.orderTimerMax-self.orderTimer),screenw-off-4,offy + 8)
+	offy = offy + text:getWidth() + 4
+	if self.fails > 0 then
+		text = love.graphics.newText(love.graphics.getFont(),"X")
+		off = text:getWidth()+4
+		for z = 1,self.fails do
+			love.graphics.print("X",screenw-off*z,offy + 8)
+		end
+	end
+end
+
+function Game:over()
+	self.active = false
 end
 
 function love.load()
-	timer = 15
+	love.graphics.setBackgroundColor(50/255,50/255,50/255)
+	smallFont = love.graphics.newFont("slkscr.ttf",16)
+	bigFont = love.graphics.newFont("slkscr.ttf",24)
+	medFont = love.graphics.newFont("slkscr.ttf",64)
+	math.randomseed(os.time())
+	game = Game:new()
+	ui = {}
+	orders = {}
 	platforms = {}
 	clones = {}
 	ingredients = {}
 	appliances = {} --Bin, Frying Pan, Chopping Board, Mixing Bowl, Plate
-	screenw = love.graphics.getWidth()
-	screenh = love.graphics.getHeight()
-	table.insert(platforms,Platform:new(0,screenh-16*12,256,16,true))
-	table.insert(platforms,Platform:new(screenw-256,screenh-16*12,256,16,true))
-	table.insert(platforms,Platform:new((screenw-256)/2,screenh-16*24,256,16,true))
-	table.insert(ingredients,Ingredient.Tomato:new(0,0))
-	table.insert(ingredients,Ingredient.Bacon:new(200,0))
-	table.insert(ingredients,Ingredient.Lettuce:new(400,0))
-	table.insert(ingredients,Ingredient.Steak:new(100,0))
-	table.insert(ingredients,Ingredient.Pasta:new(300,0,1))
-	table.insert(ingredients,Ingredient.Pasta:new(500,0,2))
-	table.insert(ingredients,Ingredient.Pasta:new(600,0,3))
-	table.insert(ingredients,Ingredient.Milk:new(700,0))
-	table.insert(appliances,Appliance.Bin:new(screenw-16,screenh-16*13))
-	table.insert(appliances,Appliance.FryingPan:new(0,screenh-32))
-	table.insert(appliances,Appliance.ChoppingBoard:new(screenw-16,screenh-16))
-	table.insert(appliances,Appliance.MixingBowl:new(screenw/2-8,screenh-16))
+	rscreenw = love.graphics.getWidth()
+	rscreenh = love.graphics.getHeight()
+	table.insert(platforms,Platform:new(0,screenh-16*24,256,32,true))
+	table.insert(platforms,Platform:new(screenw-256,screenh-16*24,256,32,true))
+	
+	table.insert(platforms,Platform:new((screenw-768)/2,screenh-16*35,768,32,true))
+	table.insert(platforms,Platform:new((screenw-32)/2,screenh-16*33,32,16*20,false))
+	
+	table.insert(platforms,Platform:new((screenw-32)/2-256,screenh-16*15,256,32,true))
+	table.insert(platforms,Platform:new((screenw+32)/2,screenh-16*15,256,32,true))
+	
+	table.insert(platforms,Platform:new(256,screenh-16*50,312,32,true))
+	table.insert(platforms,Platform:new(screenw-256-312,screenh-16*50,312,32,true))
+	
+	table.insert(appliances,Appliance.FryingPan:new(0,screenh-16*26))
+	table.insert(appliances,Appliance.ChoppingBoard:new(screenw-32,screenh-16*26))
+	
+	table.insert(appliances,Appliance.FryingPan:new((screenw-32)/2-32,screenh-16*15-32))
+	table.insert(appliances,Appliance.ChoppingBoard:new((screenw+32)/2,screenh-16*15-32))
+
+	table.insert(appliances,Appliance.MixingBowl:new((screenw-32)/2-32,screenh-32))
+	table.insert(appliances,Appliance.Bin:new((screenw+32)/2,screenh-32))
+	
+	table.insert(appliances,Appliance.Delivery:new(0,screenh-32))
+	table.insert(appliances,Appliance.Delivery:new(screenw-32,screenh-32))
+	
+	table.insert(appliances,Appliance.IngredientBox:new(screenw/2-16,screenh-16*35-32))
 	player = Player:new()
 	player:load()
 	table.insert(clones,Clone:new())
+	
+	tutorialMessage(1)
 end
 
 function love.update(dt)
-	timer = timer - dt
-	if timer <= 0 then
-		timer = 15
-		loop()
-	end
 	player:update(dt)
-	for i,o in pairs(clones) do
+	for i,o in pairs(ui) do
 		if o.remove then
-			table.remove(clones,i)
+			table.remove(ui,i)
 		end
 	end
-	for i,o in pairs(clones) do
-		if i == #clones then
-			o:record(player)
-		else
+	for i,o in pairs(ui) do
+		o:update(dt)
+	end
+	if game.active then
+		game:update(dt)
+		for i,o in pairs(clones) do
+			if o.remove then
+				table.remove(clones,i)
+			end
+		end
+		for i,o in pairs(clones) do
+			if i == #clones then
+				o:record(dt,player)
+			else
+				o:update(dt)
+			end
+		end
+		for i,o in pairs(appliances) do
 			o:update(dt)
 		end
-	end
-	for i,o in pairs(appliances) do
-		o:update(dt)
-	end
-	for i,o in pairs(ingredients) do
-		if o.remove then
-			table.remove(ingredients,i)
+		for i,o in pairs(ingredients) do
+			if o.remove then
+				table.remove(ingredients,i)
+			end
 		end
-	end
-	for i,o in pairs(ingredients) do
-		o:update(dt)
+		for i,o in pairs(ingredients) do
+			o:update(dt)
+		end
+		for i,o in pairs(orders) do
+			if o.remove then
+				table.remove(orders,i)
+			end
+		end
+		for i,o in pairs(orders) do
+			o:update(dt)
+		end
 	end
 end
 
@@ -101,8 +195,6 @@ function love.keypressed(key)
 end
 
 function loop()
-	--player.y = 0
-	--player.x = math.random(0,screenw-player.w)
 	table.insert(clones,Clone:new())
 	for i,o in pairs(clones) do
 		o.active = true
@@ -111,22 +203,38 @@ function loop()
 end
 
 function love.draw()
+	love.graphics.scale(rscreenw/screenw,rscreenh/screenh)
+	love.graphics.setFont(smallFont)
 	for i,o in pairs(platforms) do
 		o:draw()
 	end
 	for i,o in pairs(appliances) do
 		o:draw()
 	end
-	for i,o in pairs(clones) do
-		love.graphics.setColor(HSL(i/#clones,1,0.5))
-		--o:pathdraw()
-	end
-	for i,o in pairs(clones) do
-		love.graphics.setColor(HSL(i/#clones,1,0.8))
-		o:draw()
+	if game.active then
+		for i,o in pairs(clones) do
+			love.graphics.setColor(HSL(i/#clones,1,0.5))
+			--o:pathdraw()
+		end
+		for i,o in pairs(clones) do
+			love.graphics.setColor(HSL(i/#clones,1,0.8))
+			o:draw()
+		end
 	end
 	player:draw()
-	for i,o in pairs(ingredients) do
+	if game.active then
+		for i,o in pairs(ingredients) do
+			o:draw()
+		end
+		love.graphics.setFont(bigFont)
+		local x = 0
+		for i,o in pairs(orders) do
+			o:draw(x)
+			x = x + o.w + 4
+		end
+		game:draw()
+	end
+	for i,o in pairs(ui) do
 		o:draw()
 	end
 end

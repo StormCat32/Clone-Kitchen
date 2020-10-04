@@ -1,16 +1,16 @@
 --Stuck in a loop
 
 Player = {
-	speed = 400,
+	speed = 500,
 	
 	x = 0,
 	y = 0,
-	w = 16,
-	h = 16,
+	w = 32,
+	h = 32,
 	
 	jumpN = 0,
 	jumpNMax = 2,
-	jumpH = 16*8,
+	jumpH = 16*12.5,
 	jumpT = 0.6,
 	wasDown = false,
 	
@@ -25,17 +25,22 @@ Player = {
 	holdnum = 0,
 	
 	using = false,
+	
+	image = love.graphics.newImage("assets/player.png"),
+	imageHat = love.graphics.newImage("assets/hat.png"),
 }
 
 Clone = {
-	speed = 400,
+	speed = 500,
+	
+	recordingTime = 0,
 	
 	x = 0,
 	y = 0,
 	dirx = 0,
 	diry = 0,
-	w = 16,
-	h = 16,
+	w = 32,
+	h = 32,
 	
 	holdnum = 0,
 	holding = false,
@@ -45,6 +50,8 @@ Clone = {
 	positions = {},
 	
 	active = true,
+	
+	image = love.graphics.newImage("assets/clone.png"),
 }
 
 State = {
@@ -57,6 +64,8 @@ function Player:new()
 	o = {}
 	setmetatable(o, self)
 	self.__index = self
+	
+	o.x = screenw/2-16
 	
 	return o
 end
@@ -160,7 +169,7 @@ function Player:update(dt)
 					self.dirx = 0
 				end
 			end
-			if checkCollision(o.x,o.y,o.w,o.h,self.x,self.y + self.diry * dt,self.w,self.h) then
+			if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y) + self.diry * dt,self.w,self.h) then
 				if self.diry < 0 then
 					self.y = o.h+o.y
 					self.diry = 0
@@ -174,8 +183,8 @@ function Player:update(dt)
 		else
 			if self.diry > 0 then
 				if not love.keyboard.isDown("s","down") then
-					if checkCollision(o.x,o.y,o.w,o.h,self.x,self.y + self.diry * dt,self.w,self.h) then
-						if not checkCollision(o.x,o.y,o.w,o.h,self.x,self.y,self.w,self.h) then
+					if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y) + self.diry * dt,self.w,self.h) then
+						if not checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
 							self.y = o.y-self.h
 							self.diry = 0
 							self.jumpN = self.jumpNMax
@@ -198,7 +207,7 @@ function Player:update(dt)
 	end
 	local holding
 	for i,o in pairs(ingredients) do
-		if checkCollision(o.x,o.y,o.w,o.h,self.x,self.y,self.w,self.h) then
+		if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
 			if self.holding then
 				if self.holdnum == i or self.holdnum == 0 then
 					o.held = true
@@ -225,7 +234,8 @@ end
 
 function Player:draw()
 	love.graphics.setColor(1,1,1)
-	love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+	love.graphics.draw(self.image,math.floor(self.x),math.floor(self.y))
+	love.graphics.draw(self.imageHat,math.floor(self.x),math.floor(self.y-18))
 end
 
 function Clone:new()
@@ -238,11 +248,19 @@ function Clone:new()
 	return o
 end
 
-function Clone:record(object)
-	table.insert(self.positions,State:new(object.x,object.y,object.dirx,object.diry,object.holding,object.using))
+function Clone:record(dt,object)
+	self.recordingTime = self.recordingTime + dt
+	if self.recordingTime*60 >= 1 then
+		for z = 1,math.floor(self.recordingTime*60) do
+			table.insert(self.positions,State:new(object.x,object.y,object.dirx,object.diry,object.holding,object.using))
+			self.recordingTime = self.recordingTime - 1/60
+		end
+	end
+	self.recording = true
 end
 
 function Clone:update(dt)
+	self.recording = false
 	if self.active then
 		self.frame = self.frame + 1
 		self.frame = (self.frame - 1) % #self.positions + 1
@@ -252,7 +270,7 @@ function Clone:update(dt)
 		self.using = self.positions[self.frame].using
 		local holding
 		for i,o in pairs(ingredients) do
-			if checkCollision(o.x,o.y,o.w,o.h,self.x,self.y,self.w,self.h) then
+			if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
 				if not o.held then
 					if self.holding then
 						if self.holdnum == i or self.holdnum == 0 then
@@ -277,11 +295,9 @@ function Clone:update(dt)
 end
 
 function Clone:draw()
-	if self.holding then
-		love.graphics.setColor(1,1,1)
-	end
-	if self.active then
-		love.graphics.rectangle("fill",self.x,self.y,self.w,self.h)
+	love.graphics.setColor(1,1,1)
+	if not self.recording then
+		love.graphics.draw(self.image,math.floor(self.x),math.floor(self.y))
 	end
 end
 
