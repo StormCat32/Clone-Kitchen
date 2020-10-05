@@ -256,55 +256,44 @@ function Clone:new()
 end
 
 function Clone:record(dt,object)
-	self.recordingTime = self.recordingTime + dt
-	if self.recordingTime*60 >= 1 then
-		for z = 1,math.floor(self.recordingTime*60) do
-			table.insert(self.positions,State:new(object.x,object.y,object.dirx,object.diry,object.holding,object.using))
-			self.recordingTime = self.recordingTime - 1/60
-		end
-	end
+	table.insert(self.positions,State:new(object.x,object.y,object.dirx,object.diry,object.holding,object.using))
 	self.recording = true
 end
 
 function Clone:update(dt)
-	self.recordingTime = self.recordingTime + dt
-	if self.recordingTime*60 >= 1 then
-		for z = 1,math.floor(self.recordingTime*60) do
-			if self.active then
-				self.frame = self.frame + 1
-				self.frame = (self.frame - 1) % #self.positions + 1
-				self.dirx = self.positions[self.frame].dirx
-				self.diry = self.positions[self.frame].diry
-				self.holding = self.positions[self.frame].holding
-				self.using = self.positions[self.frame].using
-				local holding
-				for i,o in pairs(ingredients) do
-					if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
-						if not o.held then
-							if self.holding then
-								if self.holdnum == i or self.holdnum == 0 then
-									o.cloneheld = true
-									o.appheld = false
-									o.dirx = self.dirx
-									o.diry = self.diry
-									o.x = self.x+self.w/2-o.w/2
-									o.y = self.y+self.h/2-o.h/2
-									holding = true
-									self.holdnum = i
-								end
-							end
+	self.recording = false
+	if self.active then
+		self.frame = self.frame + 1
+		self.frame = (self.frame - 1) % #self.positions + 1
+		self.dirx = self.positions[self.frame].dirx
+		self.diry = self.positions[self.frame].diry
+		self.holding = self.positions[self.frame].holding
+		self.using = self.positions[self.frame].using
+		local holding
+		for i,o in pairs(ingredients) do
+			if checkCollision(o.x,o.y,o.w,o.h,math.floor(self.x),math.floor(self.y),self.w,self.h) then
+				if not o.held then
+					if self.holding then
+						if self.holdnum == i or self.holdnum == 0 then
+							o.cloneheld = true
+							o.appheld = false
+							o.dirx = self.dirx
+							o.diry = self.diry
+							o.x = self.x+self.w/2-o.w/2
+							o.y = self.y+self.h/2-o.h/2
+							holding = true
+							self.holdnum = i
 						end
 					end
 				end
-				if not holding then
-					self.holdnum = 0
-				end
-				self.x = self.positions[self.frame].x
-				self.y = self.positions[self.frame].y
 			end
 		end
+		if not holding then
+			self.holdnum = 0
+		end
+		self.x = self.positions[self.frame].x
+		self.y = self.positions[self.frame].y
 	end
-	self.recording = false
 end
 
 function Clone:draw()
