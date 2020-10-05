@@ -184,7 +184,7 @@ function love.load()
 	player = Player:new()
 	player:load()
 	
-	tutorialMessage(27)
+	tutorialMessage(1)
 end
 
 function love.update(dt)
@@ -258,8 +258,11 @@ end
 
 function love.keypressed(key)
 	if key == "escape" then
-		love.filesystem.write("hiscore.lua","hiscore = "..hiscore)
-		love.event.quit()
+		if game.active then
+			game:over()
+		else
+			love.event.quit()
+		end
 	end
 end
 

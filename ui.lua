@@ -310,6 +310,10 @@ function TutorialMessage:update(dt)
 			end
 		else
 			self.amount = self.amount + dt/self.textRate
+			if love.keyboard.isDown("return") then
+				self.fade = true
+				self.amount = 1
+			end
 		end
 	end
 	if self.amount >= 1 and not self.fade then
@@ -320,13 +324,20 @@ end
 
 function TutorialMessage:draw()
 	love.graphics.setFont(medFont)
-
+	
 	local offset = self.h/8
 	love.graphics.setColor(88/255,108/255,121/255,self.alpha)
 	love.graphics.rectangle("fill",math.floor(self.x),math.floor(self.y),self.w,self.h)
+	if self.layer == 1 then
+		love.graphics.setColor(88/255,108/255,121/255,self.alpha)
+		love.graphics.rectangle("fill",math.floor(self.x),math.floor(screenh-self.y-self.h),self.w,self.h)
+	end
 	love.graphics.setColor(241/255,240/255,238/255,self.alpha)
 	love.graphics.setLineWidth(4)
 	love.graphics.rectangle("line",math.floor(self.x),math.floor(self.y),self.w,self.h)
+	if self.layer == 1 then
+		love.graphics.rectangle("line",math.floor(self.x),math.floor(screenh-self.y-self.h),self.w,self.h)
+	end
 	if self.amount > 0 and (self.layer < 6 and self.layer > 2) or (self.layer >= 14 and self.layer ~= 22 and self.layer <= 25) then
 		love.graphics.setColor(105/255,222/255,1,self.alpha)
 		love.graphics.rectangle("fill",math.floor(self.x+self.w/4),math.floor(self.y+self.h),self.w/2*self.amount,self.h/8)
@@ -342,6 +353,16 @@ function TutorialMessage:draw()
 	text = love.graphics.newText(love.graphics.getFont(),self.message2)
 	off = text:getWidth()
 	love.graphics.print(self.message2,math.floor(self.x+(self.w-off)/2),math.floor(self.y+self.h/2+16-offset))
+	if self.layer == 1 then
+		text = love.graphics.newText(love.graphics.getFont(),"you can skip text by holding")
+		off = text:getWidth()
+		local offy = text:getHeight()
+		love.graphics.print("you can skip text by holding",math.floor(self.x+(self.w-off)/2),math.floor(screenh-self.y-self.h+self.h/2-16-offy+offset))
+
+		text = love.graphics.newText(love.graphics.getFont(),"enter")
+		off = text:getWidth()
+		love.graphics.print("enter",math.floor(self.x+(self.w-off)/2),math.floor(screenh-self.y-self.h+self.h/2+16-offset))
+	end
 	love.graphics.setLineWidth(1)
 end
 
